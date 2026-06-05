@@ -14,9 +14,28 @@ template<typename T> void debug(string s, T x) {cerr << "\033[1;35m" << s << "\0
 template<typename T, typename... Args> void debug(string s, T x, Args... args) {for (int i=0, b=0; i<(int)s.size(); i++) if (s[i] == '(' || s[i] == '{') b++; else
 if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\033[1;35m" << s.substr(0, i) << "\033[0;32m = \033[33m" << x << "\033[31m | "; debug(s.substr(s.find_first_not_of(' ', i + 1)), args...); break;}}
 
-void solve() {
+int solve() {
 
     int n; cin >> n;
+    multiset<int> ms;
+
+    for(int i=0; i<n; i++) {
+        int x; cin >> x; ms.insert(x);
+    }
+
+    int less = 0;
+    int ans = INT_MAX;
+
+    for(auto x : ms) {
+        int cnt = ms.count(x);
+        int more = n - less - cnt;
+
+        ans = min(ans, max(less, more));
+        less += cnt;
+    }
+
+    return ans;
+
 }
 
 signed main() {
@@ -24,6 +43,6 @@ signed main() {
     cin.tie(NULL);
     int t; cin >> t;
     while(t--) {
-        solve();
+        cout << solve() << "\n";
     }
 }
