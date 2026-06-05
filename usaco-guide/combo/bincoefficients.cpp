@@ -1,0 +1,58 @@
+#include <bits/stdc++.h>
+using namespace std;
+ 
+#ifdef LOCAL
+#define DEBUG(...) debug(#__VA_ARGS__, __VA_ARGS__)
+#else
+#define DEBUG(...) 6
+#endif
+ 
+template<typename T, typename S> ostream& operator << (ostream &os, const pair<T, S> &p) {return os << "(" << p.first << ", " << p.second << ")";}
+template<typename C, typename T = decay<decltype(*begin(declval<C>()))>, typename enable_if<!is_same<C, string>::value>::type* = nullptr>
+ostream& operator << (ostream &os, const C &c) {bool f = true; os << "["; for (const auto &x : c) {if (!f) os << ", "; f = false; os << x;} return os << "]";}
+template<typename T> void debug(string s, T x) {cerr << "\033[1;35m" << s << "\033[0;32m = \033[33m" << x << "\033[0m\n";}
+template<typename T, typename... Args> void debug(string s, T x, Args... args) {for (int i=0, b=0; i<(int)s.size(); i++) if (s[i] == '(' || s[i] == '{') b++; else
+if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\033[1;35m" << s.substr(0, i) << "\033[0;32m = \033[33m" << x << "\033[31m | "; debug(s.substr(s.find_first_not_of(' ', i + 1)), args...); break;}}
+
+const int MOD = 1e9 + 7;
+ 
+vector<long long> fact;
+
+long long binexp(int a, int b) {
+    long long cur = a;
+    long long res = 1;
+    while(b) {
+        if(b & 1) res *= cur;
+        b /= 2;
+        res %= MOD;
+        cur *= cur;
+        cur %= MOD;
+    }
+
+    return res;
+}
+
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    long long cur = 1;
+    fact.push_back(cur);
+    for(long long i=1; i<=1000007; i++) {
+        cur *= i;
+        cur %= MOD;
+        fact.push_back(cur);
+    }
+
+    int n; cin >> n;
+    while(n--) {
+        long long a, b; cin >> a >> b;
+        long long res = fact[a];
+        res *= binexp(fact[b], MOD-2);
+        res %= MOD;
+        res *= binexp(fact[a-b], MOD-2);
+        res %= MOD;
+        cout << res << "\n";
+    }
+
+}
